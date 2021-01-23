@@ -1,0 +1,298 @@
+
+.mine{background-image:linear-gradient(to bottom,blue,cyan);
+    padding:10px;
+    margin: 5px;
+}
+header{
+    color:ghostwhite;
+    font-family: 'Times New Roman', Times, serif;
+    background-color:rgb(51, 21, 51);
+}
+.bn{
+    background-image: linear-gradient(to right,rgb(51, 21, 51),rgb(90, 54, 90));
+    border-radius: 20px;       
+}
+
+.nice{
+    color:aqua;
+}
+.fiximg{
+    width:20%;
+    height:30%;
+}
+.poo{
+    border-radius: 20px;
+    outline-color: none;
+    outline: None;
+}
+.outercont{
+    border-radius: 10px;
+    width:1450px;
+    height:650px;
+    padding: 5px;
+}
+
+#miffle{
+    position: absolute;
+    top:7%;
+}
+input{
+    border-radius: 50px;
+}
+.msg_container_outgoing{
+    background-color: teal;
+    color: wheat;
+    border-radius: 20px;
+    padding:8px;
+    float:left;
+    max-width: 50%;
+    border-top-right-radius: 0%;
+    
+}
+.msg_container_incoming{
+    float: right;
+    background-color: purple;
+    color: whitesmoke;
+    border-radius: 20px;
+    max-width: 50%;
+    border-top-left-radius: 0%;
+    padding: 8px;
+}
+
+p#sender{
+    padding:3px;
+    margin: 2px;
+    font-family: 'Times New Roman', Times, serif;
+    color: whitesmoke;
+    float:left;
+    
+}
+p#you{
+    padding:3px;
+    margin: 2px;
+    font-family: 'Times New Roman', Times, serif;
+    color: whitesmoke;
+    float:right;
+}
+
+
+/*new css file*/
+
+header{
+    box-shadow: 0 5px 8px -9px rgba(0,0,0,.75);
+    color:white;
+    font-family: cursive;
+    background-image: linear-gradient(to right,blue,cyan);
+}
+div.main{
+    background-image: radial-gradient(blue,cyan);
+}
+
+div.chat-footer{
+    background-color: #eff2f5;
+    display: flex;
+    padding: 0px;
+    border-radius: 999px;
+}
+div.chat-footer .input-box{
+    display: flex;
+    flex: 2;
+}
+button[type="submit"]{
+    background-image: linear-gradient(to top,purple,magenta);
+    color: ghostwhite;
+    margin-right: 0px;
+    font-size: large;
+    border: none;
+    border-radius: 60px;
+}
+
+div.chat-footer input[type="text"]{
+    background: transparent;
+    outline: none;
+    border: none;   
+}
+
+div.chat-body{
+    height: 445px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+div.chat-header{
+    font-family: 'Times New Roman', Times, serif;
+    height:10%;
+}
+div.ulist-header{
+    height:10%;
+}
+div.ulist-header button{
+    border: none;
+    outline-color: none;
+    outline: none;
+
+}
+div.ulist-body{
+    height:88%;
+    background-image: linear-gradient(to top,tan,thistle);
+    overflow-y: auto;
+}
+div.ulist-body li button {
+    border: none;
+    background: None;
+    color: black;
+    outline-color: none;
+    outline: none;
+    
+}
+div.main{
+    position: absolute;
+    left:50%;
+    top:50%;
+    font-family: 'Times New Roman', Times, serif;
+    transform: translate(-50%,-50%);
+    height: 75%;
+    width: 70%;
+}
+.chat-header button{
+    border: none;
+    background-image: radial-gradient(to top,cyan,blue);
+    color: purple;
+}
+/*VIDEO_CALLING  ELEMENT*/
+
+#yours {
+    position: absolute;
+    display: block;
+    border: 2px solid black;
+    border-radius: 5px;
+    top: 15px;
+    right: 15px;
+    width: 152px;
+    height: 152px;
+  }
+  #your_video{
+    width: 148px;
+    height: 148px;
+    object-fit: cover;
+    margin: 0px;
+    padding: 0px;
+  }
+#theirs {
+    border: 2px solid black;
+    border-radius: 5px;
+    width: 742px;
+    height: 404px;
+  }
+  #their_video{
+    margin: 0px;
+    padding: 0px;
+    width: 740px;
+    height: 400px;
+    object-fit: cover;
+ 
+  }   
+  .call_videos{
+      z-index: 1;
+  }
+  
+  .call_btn_div{
+      position: absolute;
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+      align-items: center;
+      left: 38%;
+      bottom: 21%;
+
+  }
+  .call_btn_div button{
+      font-size:22px;
+      padding: 5px;
+      margin-right: 50px;
+      outline-color: none;
+      outline: none;
+      color: white;
+      background-image: linear-gradient(to top,blue,cyan);
+      margin: 5px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      transition: 100ms ease-in-out;
+  }
+  .call_btn_div button:hover{
+      transform: scale(1.07);
+  }
+  .call_btn_div  #end_call_btn{
+      
+      background-image: linear-gradient(to top,red,red);
+  }
+  #call-page{
+      margin: 0px;
+      padding: 0px;
+      filter:drop-shadow(8px 3px 4px grey);
+  }
+  
+  .page {
+    position: absolute;
+    margin: 5px;
+    height: 100%;
+    width: 96%;
+    padding: 0px;
+  }
+
+  #do_vid_call{
+      border: none;
+      outline-color: none;
+      outline:none;
+      background: transparent;
+      color: white;
+      transition: 100ms ease-in-out;
+  }
+  #do_vid_call:hover{
+      transform: scale(1.10);
+      color: red;
+
+  }
+  body{
+      background-image: url("https://i.pinimg.com/originals/fa/8c/4f/fa8c4f05c9171dffb37e41c9a0187b5e.jpg"),linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.8));
+     
+  }
+
+.startStopRecord button{
+            border-radius: 10px;
+            background-image: linear-gradient(to top,purple,magenta);
+            color: white;
+            font-family: Times New Roman;
+            font-size: 10px;
+            outline-color: none;
+            outline: none;
+            border: none;
+            margin: 3px;
+            padding: 3px;
+}
+.startStopRecord{
+            position: absolute;
+            top:0px;
+            left: 0px;
+            margin-left: 0px;
+            background: black;
+            display: flex;
+            position: absolute;
+            
+            padding: 6px;
+            margin: 5px;
+            align-items: center;
+            justify-content: center;
+            object-fit: cover;
+}
+#vid_save{
+    position:absolute;
+    top:120%;
+    margin: 30px;
+    padding:20px;
+    left: 25%;
+    bottom: 50px;
+    height: 50%;
+    width: 50%;
+}

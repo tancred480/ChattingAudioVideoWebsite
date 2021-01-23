@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />
+<link rel="stylesheet" href="css/style1.css">
+  <link rel="shortcut icon" href="#">
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.-dev.js"></script>
+<script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
+<script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="my_video_call.js"></script>
+<script>
+    function onUserSelected(userName){
+        reciever=userName;
+        console.log(userName+" selected");
+        document.getElementById("selected_user").innerText=reciever;
+    }
+    
+    function scrollToBottom(){
+        var chat_body=document.getElementById("inn");
+        chat_body.scrollTop=chat_body.scrollHeight;
+    }
+    function stopBothVideoAndAudio(stream) {
+    stream.getTracks().forEach(function(track) {
+        if (track.readyState == 'live') {
+            track.stop();
+        }
+    });
+}
+</script>
+</head>
+<body>
+    
+<div class="d-flex mt-2  main">
+    <!--LEFT container-->
+    <div class="left-container shadow-lg col-sm-3 ">
+            <!--USER LIST HEADER-->
+        <div class="d-flex ulist-header mt-1 bg-dark shadow-lg col-sm-12 row-sm-2">
+            <button class="rounded-circle bg-light mt-2 mb-3 mr-2"><i class="far fa-user text-dark" style="font-size: 20px;"></i></button><label id="myInfo" class="text-light mt-3"><script>document.write(sender);</script></label>
+        </div>
+            <!--USER LIST BODY-->
+        <div class="ulist-body  d-flex flex-column mt-1 mb-2 shadow-lg bg-warning col-sm-12 row-sm-10" id="ulist"></div>
+    </div>
+
+    <!--RIGHT container-->
+    <div class="right-container  shadow-lg  col-sm-9">
+        <!--CHAT HEADER CONTAINER-->
+        <div class="d-flex chat-header mt-1 bg-dark col-sm-12 shadow-lg  mb-2 row-sm-2">
+            <div class="col-sm-11"><button class="rounded-circle bg-light mt-3 mr-2"><i class="fas fa-user text-dark" style="font-size: 27px;"></i></button><label id="selected_user" class="text-light"></label></div>
+            <div class="col-sm-1"><button class="vid_btn" id="do_vid_call"><i class="fas fa-video  mt-4" style="font-size: 23px;"></i></button></div>
+        </div>
+        <!--CHAT BODY CONTAINER-->
+        <div id="inn" class="chat-body  col-sm-12 shadow-lg mb-1">
+            
+            <!--<div id="call-page" class="page">
+                <div class="call_videos">
+                <div id="yours"></div>
+                <div id="theirs"></div>
+                </div>
+               <div class="call_btn_div">
+                <button id="mute_audio_btn"><i class="fa fa-microphone-slash" aria-hidden="true"></i></button>     
+                <button id="end_call_btn"><i class="fa fa-phone"aria-hidden="true"></i></button>
+                <button id="mute_video_btn"><i class="fas fa-video-slash"aria-hidden="true"></i></button>
+               </div>    
+            </div>-->
+        </div>
+        <!--CHAT FOOTER CONTAINER-->
+        <div  class="chat-footer  col-sm-12">
+            <form onsubmit="return false" class="input-box">
+                    <input id="mssg"  type="text" placeholder="Enter your Message"  class="col-sm-10">
+                       <button type="submit" class="btn btn-primary col-sm-2"  onclick="formprocess()"><i class="fas fa-paper-plane text-
+                        light" style="font-size: large;"></i></button>
+            </form>
+        </div>
+        
+    </div>
+</div><br><br>
+<div class="container-fluid bg-light">
+    <video id="vid_save" controls>
+    </video>
+</div>
+<script>
+    
+    
+     //for audio toggle btn
+     const muteUnmute=()=>{
+        const enabled=myVideo_stream.getAudioTracks()[0].enabled;
+        if(enabled){
+            myVideo_stream.getAudioTracks()[0].enabled=false;
+            setUnmuteButton();
+        }else{
+           myVideo_stream.getAudioTracks()[0].enabled=true;
+           setMuteButton();
+        }
+    }
+
+    const setMuteButton=()=>{
+        const html=`<li class="fas fa-microphone"></li>
+        `;
+        document.querySelector("#mute_audio_btn").innerHTML=html;
+    }
+
+    const setUnmuteButton=()=>{
+       const html=`<li class="fas fa-microphone-slash"></li>
+       `;
+       document.querySelector("#mute_audio_btn").innerHTML=html;
+   }
+   //for video toggle btn
+   const playStop=()=>{
+       let enabled=myVideo_stream.getVideoTracks()[0].enabled;
+       if(enabled){
+           myVideo_stream.getVideoTracks()[0].enabled=false;
+           setPlayVideo();
+       }else{
+           myVideo_stream.getVideoTracks()[0].enabled=true;
+           setStopVideo();
+       }
+   }
+   
+   const setPlayVideo=()=>{
+       const html=`
+       <li class="fas fa-video-slash"></li>
+       `;
+       document.querySelector("#mute_video_btn").innerHTML=html;
+   }
+   
+   const setStopVideo=()=>{
+       const html=`
+       <li class="fas fa-video"></li>
+       `;
+       document.querySelector("#mute_video_btn").innerHTML=html;
+   }
+  //Timer off the Recording Video all function
+  
+
+    function load_vid_div(){
+        var video_call_div="";
+        let chat_body_div=document.getElementById("inn");
+        video_call_div=`
+        <div id="call-page" class="page">
+            <div class="call_videos">
+            <div id="yours"></div>
+            <div id="theirs"></div>
+            </div>
+           <div class="call_btn_div">
+            <button onclick="muteUnmute()" id="mute_audio_btn"><i class="fa fa-microphone-slash" aria-hidden="true"></i></button>     
+            <button id="end_call_btn"><i class="fa fa-phone"aria-hidden="true"></i></button>
+            <button onclick="playStop()" id="mute_video_btn"><i class="fas fa-video"aria-hidden="true"></i></button>
+           </div>   
+                       <div class="d-flex justify-content-start startStopRecord col-sm-3 ml-1" style="border-radius:10px;">
+                           <button class="startRecordBtn" onclick="start_stop_Record()">Start Recording</button>
+                           <i class="fas fa-record-vinyl" style="color: white"></i>
+                           <div class="time_module">
+                               <small class="text-light ml-2 " id="stop_watch">   00:00:00
+                               </small>
+                           </div>
+                       </div>
+        </div>`;
+        chat_body_div.innerHTML+=video_call_div;
+    }
+    
+
+    var theirsVideo=document.createElement('video');
+    theirsVideo.id="their_video";
+    var their_record_stream="";
+    let chunks=[];
+    
+    var myVideo_stream="";
+    var myVideo=document.createElement('video');
+
+    myVideo.id="your_video";
+    myVideo.muted=true;
+
+     const vid_btn=document.getElementById("do_vid_call");
+     //Call coming to you
+     myPeer.on('call',call=>{
+        load_vid_div();
+        var theirsVideo_div=document.getElementById("theirs");
+        var myVideo_div=document.getElementById("yours");
+        var accept_call=setTimeout(confirm("A call is Comming with an "),3000);
+         //for testing purpose
+         if(accept_call){
+            navigator.mediaDevices.getUserMedia({video:true,audio:{echoCancellation:{exact:true}}}).then(mystream=>{
+            myVideo_stream=mystream;
+            vid_btn.style.color="red";
+            myVideo.srcObject=mystream;
+            myVideo.play();
+            myVideo_div.append(myVideo);
+            call.answer(mystream);
+            
+            call.on('stream',stream=>{
+                their_record_stream=stream;
+                theirsVideo.srcObject=stream;
+                theirsVideo.play();
+                theirsVideo_div.appendChild(theirsVideo);
+            });
+
+            call.on("close",()=>{
+                console.log("CLOSE FUNCTION CALLED FOR INCOMING")
+                myVideo.remove();
+                console.log("My video removed");
+                call.close();
+                theirsVideo.remove();
+                vid_btn.style.color="white";
+                console.log("Their video removed")
+             
+                       // if(window.existingCall) window.existingCall.close();
+                stopBothVideoAndAudio(mystream);
+            });
+
+            var end_call_btn=document.getElementById("end_call_btn");
+                    //when Call Cut button is clicked then this function will run 
+                    end_call_btn.addEventListener('click',()=>{
+                     if(call) {
+                         
+                        call.close();
+                        var vid_div=document.getElementById("call-page");
+                       if(vid_div){
+                           vid_div.remove();
+                       }
+                       
+                        }
+                     vid_btn.style.color="white";
+                     //if(window.existingCall) window.existingCall.close();
+                     stopBothVideoAndAudio(mystream);
+                    });
+
+        })
+
+         }else{
+             var vid_div=document.getElementById("call-page");
+                        if(vid_div){
+                            vid_div.remove();
+                        }
+             console.log("You denied the call.");
+         }
+     });
+     //you are calling
+     vid_btn.addEventListener("dblclick",()=>{
+        load_vid_div();
+        var theirsVideo_div=document.getElementById("theirs");
+        var myVideo_div=document.getElementById("yours");
+         navigator.mediaDevices.getUserMedia({video:true,audio:{echoCancellation:{exact:true}}}).then(my_stream=>{
+         myVideo_stream=my_stream;
+         myVideo.srcObject=my_stream;
+         myVideo.play();
+         myVideo_div.appendChild(myVideo);
+         if(reciever){
+             var userId="";
+            io.emit("get_peerId",reciever);
+            io.on("take_peerId",userId=>{
+                if(userId){
+                    const call= myPeer.call(userId,my_stream);
+                    call.on("stream",(stream)=>{
+                    their_record_stream=stream;
+                        theirsVideo.srcObject=stream;
+                        theirsVideo.play();
+                        theirsVideo_div.appendChild(theirsVideo);
+                    });
+                    call.on('close',()=>{
+                        call.close();
+                        document.getElementById("call-page").remove();
+                       // if(window.existingCall) window.existingCall.close();
+                        stopBothVideoAndAudio(my_stream);
+                    });
+                    peers[userId]=call;
+                    var end_call_btn=document.getElementById("end_call_btn");
+                    //when Call Cut button is clicked then this function will run 
+                    end_call_btn.addEventListener('click',()=>{
+                     if(call) {
+                         call.close();
+                         var vid_div=document.getElementById("call-page");
+                        if(vid_div){
+                            vid_div.remove();
+                        }
+
+                        }
+                       // if(window.existingCall){window.existingCall.close();}
+                     vid_btn.style.color="white";
+                     stopBothVideoAndAudio(my_stream);
+                    });
+     
+                 }
+                });
+            
+         }else{
+             alert("please select the user first to whome you want to call :)");
+         }
+         });
+         
+     });
+     var ms=0,s=0,m=0;//initializing the minute,seconds,mili-seconds
+     var timer; 
+
+     function start(){
+         if(!timer){
+             timer=setInterval(run,10);}//run the run function after every 10 mili-seconds
+         }
+     function run(){
+       var stopwatchEl=document.querySelector("#stop_watch");
+         stopwatchEl.textContent=((m<10?"0"+m:m)+":"+(s<10?"0"+s:s)+":"+(ms<10?"0"+ms:ms)).toString();
+         ms++;
+         if(ms==100){ms=0;s++;}
+         if(s==60){ s=0;m++; }
+     }
+     function stop(){
+         clearInterval(timer);timer=false;ms=0;s=0; m=0;
+         var stopwatchEl=document.querySelector("#stop_watch");
+         stopwatchEl.textContent=((m<10?"0"+m:m)+":"+(s<10?"0"+s:s)+":"+(ms<10?"0"+ms:ms)).toString();
+     }
+   var mediaRecorder="";
+     
+     function start_stop_Record(){
+         alert("clicked button successfully")
+       var record_btn=document.querySelector(".startRecordBtn");
+       if(record_btn.innerHTML=="Stop Recording"){
+           
+           record_btn.innerHTML="Start Recording";
+           record_btn.style.backgroundImage="linear-gradient(to right,purple,magenta)";
+           var record_btn_icon=document.querySelector(".fa-record-vinyl");
+           record_btn_icon.style.color="white";
+           stop();//calling stop function to stop the video recording watch
+           mediaRecorder.stop();
+            mediaRecorder.onstop=(ev)=>{
+                            let blob=new Blob(chunks,{type:'video/webm'});
+                            chunks=[];
+                            let vid2=document.getElementById("vid_save");
+                
+                            let video_URL=window.URL.createObjectURL(blob);
+                            vid2.src=video_URL;
+                            vid2.play();
+                        }
+           
+       }else if(record_btn.innerHTML="Start Recording"){
+           
+           record_btn.innerHTML="Stop Recording";
+           record_btn.style.backgroundImage="linear-gradient(to left,purple,magenta)";
+           var record_btn_icon=document.querySelector(".fa-record-vinyl");
+           record_btn_icon.style.color="red";
+           start();//calling the start function to start the video recording watch
+            mediaRecorder=new MediaRecorder(their_record_stream,{
+               mimeType:'video/webm;codecs=vp9,opus'
+           });
+           
+            mediaRecorder.start(10);
+            mediaRecorder.ondataavailable=(ev)=>{
+                                console.log("before chunks available");
+                                chunks.push(ev.data);
+                                console.log("After chunks available");
+                        }
+           
+       }
+   }
+    
+    </script>
+    <script src="js/jquery.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.js"></script>
+</body>
+</html>
